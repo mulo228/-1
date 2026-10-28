@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d32">
+  <title>Без очереди — предзаказ еды</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Без очереди — главная">
+      <span class="brand-mark">Б</span>
+      <span><strong>без очереди</strong><small>Питание · Финансовый университет</small></span>
+    </a>
+    <nav>
+      <button class="nav-link active" data-view="menu">Меню</button>
+      <button class="nav-link" data-view="orders">Мои заказы</button>
+      <button class="nav-link" data-view="admin">Панель столовой</button>
+    </nav>
+    <button class="cart-button" id="cart-toggle">Корзина <span id="cart-count">0</span></button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">ПРЕДЗАКАЗ НА СЕГОДНЯ</span>
+        <h1>Обед без очереди.<br><em>Больше времени на себя.</em></h1>
+        <p>Выберите готовые блюда онлайн — заберите заказ в столовой по номеру или QR-коду.</p>
+        <button class="primary-button" id="browse-menu">Выбрать обед <span>↗</span></button>
+        <div class="hero-note"><span class="live-dot"></span> Только блюда, доступные сегодня</div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="plate"><div class="food food-one"></div><div class="food food-two"></div><div class="food food-three"></div><div class="food food-four"></div></div>
+        <div class="floating-tag tag-top">Свежий обед <b>✓</b></div>
+        <div class="floating-tag tag-bottom"><span>⏱</span><div><b>Меньше ожидания</b><small>Заказ уже собран</small></div></div>
+      </div>
+    </section>
+
+    <section class="content-section" id="menu-section">
+      <div class="section-heading">
+        <div><span class="eyebrow">МЕНЮ СТОЛОВОЙ</span><h2>Что будем сегодня?</h2><p>Демонстрационное меню · цены и остатки условные</p></div>
+        <div class="menu-meta"><span class="live-dot"></span> Наличие обновляется в прототипе</div>
+      </div>
+      <div class="filters">
+        <button class="filter active" data-filter="Все">Всё меню</button>
+        <button class="filter" data-filter="Горячее">Горячее</button>
+        <button class="filter" data-filter="Супы">Супы</button>
+        <button class="filter" data-filter="Салаты">Салаты</button>
+        <button class="filter" data-filter="Напитки">Напитки</button>
+      </div>
+      <div class="product-grid" id="product-grid"></div>
+    </section>
+
+    <section class="how-section">
+      <div><span class="eyebrow">ВСЁ ПРОСТО</span><h2>Заказал. Пришёл. Забрал.</h2></div>
+      <div class="steps">
+        <article><span>01</span><h3>Выберите</h3><p>Добавьте готовые блюда в корзину.</p></article>
+        <article><span>02</span><h3>Оформите</h3><p>Выберите онлайн-оплату или оплату на кассе.</p></article>
+        <article><span>03</span><h3>Заберите</h3><p>Покажите QR-макет или назовите номер заказа.</p></article>
+      </div>
+    </section>
+
+    <section class="view hidden" id="orders-view">
+      <div class="section-heading"><div><span class="eyebrow">ИСТОРИЯ</span><h2>Мои заказы</h2><p>Заказы, созданные в этом браузере.</p></div></div>
+      <div id="orders-list" class="orders-list"></div>
+    </section>
+
+    <section class="view hidden" id="admin-view">
+      <div class="section-heading"><div><span class="eyebrow">ДЛЯ СОТРУДНИКОВ</span><h2>Панель столовой</h2><p>Демонстрация очереди заказов и управления остатками.</p></div><span class="demo-pill">ДЕМО-РЕЖИМ</span></div>
+      <div class="admin-stats" id="admin-stats"></div>
+      <div class="admin-layout">
+        <div class="panel-card"><h3>Заказы</h3><div id="admin-orders"></div></div>
+        <div class="panel-card"><h3>Остатки блюд</h3><div id="stock-controls"></div></div>
+      </div>
+      <p class="notice">Важно: это фронтенд-прототип. Панель не защищена авторизацией, данные хранятся только в localStorage этого браузера.</p>
+    </section>
+  </main>
+
+  <footer><span class="brand-mark small">Б</span><span>Без очереди · Концепция MVP</span><span class="footer-right">Учебный демонстрационный проект</span></footer>
+
+  <div class="overlay hidden" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Корзина" aria-hidden="true">
+    <div class="drawer-heading"><div><span class="eyebrow">ВАШ ЗАКАЗ</span><h2>Корзина</h2></div><button class="icon-button" id="close-cart" aria-label="Закрыть корзину">×</button></div>
+    <div id="cart-items" class="cart-items"></div>
+    <div class="cart-bottom">
+      <div class="total-line"><span>Итого</span><strong id="cart-total">0 ₽</strong></div>
+      <label class="field-label" for="customer-name">Ваше имя (необязательно)</label>
+      <input id="customer-name" placeholder="Например, Анна" maxlength="40">
+      <label class="field-label">Способ оплаты</label>
+      <div class="payment-options">
+        <label><input type="radio" name="payment" value="online" checked><span><b>Онлайн</b><small>Демо без списания денег</small></span></label>
+        <label><input type="radio" name="payment" value="onsite"><span><b>При получении</b><small>Картой или наличными на кассе</small></span></label>
+      </div>
+      <button class="primary-button full-width" id="place-order">Подтвердить заказ <span>→</span></button>
+      <p class="tiny-note">Реальная оплата не подключена. Прототип не принимает платёжные данные.</p>
+    </div>
+  </aside>
+
+  <div class="modal-backdrop hidden" id="order-modal">
+    <div class="order-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="icon-button modal-close" id="close-modal" aria-label="Закрыть">×</button>
+      <div class="success-icon">✓</div>
+      <span class="eyebrow">ЗАКАЗ СОЗДАН</span>
+      <h2 id="modal-title">Ваш обед уже в системе</h2>
+      <p>Покажите номер сотруднику столовой. QR ниже — демонстрационный макет, не настоящий платёжный или кассовый код.</p>
+      <div class="ticket"><small>НОМЕР ЗАКАЗА</small><strong id="new-order-number">1042</strong><div class="fake-qr" aria-label="Декоративный макет QR-кода"></div><span id="new-order-status" class="status-badge">Принят</span></div>
+      <button class="primary-button full-width" id="modal-done">Готово</button>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
